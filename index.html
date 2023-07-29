@@ -1,0 +1,123 @@
+<!DOCTYPE HTML>
+
+<head>
+  <title>SameGame</title>
+        <script>
+    function wait(ms){
+       var start = new Date().getTime();
+       var end = start;
+       while(end < start + ms) {
+         end = new Date().getTime();
+      }
+    }
+
+    function shuffle(array) {
+      let currentIndex = array.length,  randomIndex;
+
+      // While there remain elements to shuffle.
+      while (currentIndex != 0) {
+
+        // Pick a remaining element.
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [
+          array[randomIndex], array[currentIndex]];
+      }
+
+      return array;
+    }
+    window.addEventListener("load", (event) => {
+  		document.querySelector(".create").addEventListener("click", (e) => {
+  		  // clear first
+  		  let ct = document.querySelector(".container");
+  		  while(ct.firstChild) {
+  		    ct.removeChild(ct.lastChild);
+  		  }
+  		  // calculate size
+  		  let txt = document.querySelector(".words").value.split("\n");
+  		  //console.log(txt);
+        let l = txt.length*2;
+        let w = 0; let h = 0;
+        for(let i = Math.floor(Math.sqrt(l)); i>=0; i--) {
+          //console.log(l,i);
+          if(l%i == 0) {
+            h = i;
+            w = l/i;
+            break;
+          }
+        }
+
+        let ntxt = txt.concat(txt);
+        shuffle(ntxt);
+        //console.log(ntxt);
+        let clk = false;
+        let clkd = null;
+        let tb = document.createElement("table");
+        for(let i = 0; i<h;i++) {
+          let rw = document.createElement("tr");
+          for(let j = 0; j<w; j++) {
+            let cl = document.createElement("td");
+            let idx = i*w+j;
+            let inr = document.createElement("p")
+            inr.innerText = idx.toString(36);
+            cl.appendChild(inr);
+            let wrd = document.createElement("p")
+            wrd.innerText = ntxt[idx];
+            //console.log(idx,ntxt[idx]);
+            wrd.style.display = "none";
+            cl.appendChild(wrd);
+            cl.addEventListener("click", (e) => {
+              inr.style.display = "none";
+              wrd.style.display = "inline";
+              cl.style.background = "#fff";
+              //console.log(cl);
+              //console.log(clk);
+              //console.log(clkd);
+              if(!clk) {
+                clk = true;
+                clkd = cl;
+                //console.log(clkd);
+              } else {
+                if (clkd.lastChild.innerText != cl.lastChild.innerText) {
+                setTimeout(() => {
+                  clkd.firstChild.style.display = "inline";
+                  clkd.lastChild.style.display = "none";
+                  clkd.style.background = "#1111ff";
+                  inr.style.display = "inline";
+                  wrd.style.display = "none";
+                  cl.style.background = "#1111ff";
+                  },1000);
+                }
+                clk = false;
+              }  
+            });
+            rw.appendChild(cl);
+          }
+          tb.appendChild(rw);
+        }
+        ct.appendChild(tb);
+  		});
+		});
+  </script>
+  <style>
+    body { font-family: sans-serif; }
+    td {
+			width: 200px;
+			height: 200px;
+			background: #1111ff;
+			font-size: 50px;
+      border: 5px solid #fff;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <textarea class="words">Enter Words Here</textarea>
+  <br>
+  <button class="create">Create Grid</button>
+  <div class="container">
+    <p>Grid will appear here!</p>
+  </div>
+</body>
