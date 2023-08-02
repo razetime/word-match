@@ -48,6 +48,7 @@
             break;
           }
         }
+        //console.log(h,w);
 
         let ntxt = txt.concat(txt);
         shuffle(ntxt);
@@ -68,13 +69,10 @@
             //console.log(idx,ntxt[idx]);
             wrd.style.display = "none";
             cl.appendChild(wrd);
-            cl.addEventListener("click", (e) => {
+            let handleClick = (e) => {
               inr.style.display = "none";
               wrd.style.display = "inline";
               cl.style.background = "#fff";
-              //console.log(cl);
-              //console.log(clk);
-              //console.log(clkd);
               if(!clk) {
                 clk = true;
                 clkd = cl;
@@ -89,10 +87,15 @@
                   wrd.style.display = "none";
                   cl.style.background = "#1111ff";
                   },1000);
+                } else {
+                  clkd.removeEventListener("click",handleClick);
+                  cl.removeEventListener("click",handleClick);
                 }
+                
                 clk = false;
               }  
-            });
+            };
+            cl.addEventListener("click", handleClick);
             rw.appendChild(cl);
           }
           tb.appendChild(rw);
